@@ -3,12 +3,12 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyD3TRW50j5-1g62WYO7m4EBBq75PwuFcTA",
-    authDomain: "e-commerce-ead26.firebaseapp.com",
-    projectId: "e-commerce-ead26",
-    storageBucket: "e-commerce-ead26.firebasestorage.app",
-    messagingSenderId: "296685902997",
-    appId: "1:296685902997:web:8b2104baef6d484ffe0f9c"
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
