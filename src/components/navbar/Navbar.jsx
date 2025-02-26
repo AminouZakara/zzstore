@@ -111,7 +111,7 @@ function Navbar() {
                   {
                     userData.role === 'Admin' ? <div className="flow-root">
                       <Link to={'/dashboard'} className="-m-2 block p-2 font-medium text-gray-900" style={{ color: mode === 'dark' ? 'white' : '', }}>
-                        admin
+                        Admin
                       </Link>
                     </div> : ''
                   }

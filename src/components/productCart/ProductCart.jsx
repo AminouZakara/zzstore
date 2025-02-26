@@ -48,7 +48,7 @@ function ProductCard() {
                                                     <img 
                                                     src={images}
                                                      alt={`Uploaded ${index}`} width="200px"
-                                                     className=" rounded-2xl w-full h-80 p-2 hover:scale-110 transition-scale-110  duration-300 ease-in-out"
+                                                     className=" rounded-2xl w-full h-full p-2 hover:scale-110 transition-scale-110  duration-300 ease-in-out"
                                                       />
                                         </div>
                                         <div className="p-5 border-t-2">
