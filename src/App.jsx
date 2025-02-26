@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   BrowserRouter as Router,
   Route,
@@ -20,6 +20,8 @@ import AddProduct from './pages/admin/pages/AddProduct';
 import UpdateProduct from './pages/admin/pages/UpdateProduct';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { collection, getDocs } from 'firebase/firestore';
+import { fireDB } from './firebase/FirebaseConfig';
 
 function App() {
   return (
@@ -30,12 +32,12 @@ function App() {
           <Route path="/order" element={<ProtectedRoutes><Order /></ProtectedRoutes>} />
           <Route path="/cart" element={<ProtectedRoutes><Cart /></ProtectedRoutes>} />
           <Route path="/allproducts" element={<AllProducts />} />
-          <Route path="/dashboard" element={<ProtectedRoutesForAdmin> <Dashboard /> </ProtectedRoutesForAdmin>} />
+          <Route path="/dashboard" element={ <Dashboard />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/productinfo/:id" element={<ProductInfo />} />
-          <Route path="/addproduct" element={<ProtectedRoutesForAdmin> <AddProduct /> </ProtectedRoutesForAdmin>} />
-          <Route path="/updateproduct" element={<ProtectedRoutesForAdmin> <UpdateProduct /> </ProtectedRoutesForAdmin>} />
+          <Route path="/addproduct" element={<AddProduct /> } />
+          <Route path="/updateproduct" element={<UpdateProduct /> } />
           <Route path="/*" element={<NoPage />} />
         </Routes>
         <ToastContainer />
@@ -58,9 +60,37 @@ export const ProtectedRoutes = ({ children }) => {
 }
 
 // Protect admin from accessing dashboard without login
+
 export const ProtectedRoutesForAdmin = ({ children }) => {
-  const admin = JSON.parse(localStorage.getItem('user'))
-  if (admin?.user?.email === 'azt@gmail.com') {
+  const user = JSON.parse(localStorage.getItem('user'))
+  const userId = user.user.uid
+
+  //get userData from firebase
+  const [loading, setLoading] = useState(false);
+  if (user) {
+    useEffect(() => {
+      getUserData();
+    }, [])
+  }
+
+  const [userData, setUserData] = useState([])
+  const getUserData = async () => {
+    setLoading(true)
+    try {
+      const querySnapshot = await getDocs(collection(fireDB, "users"), userId);
+      querySnapshot.forEach((doc) => {
+        setUserData(doc.data())
+      });
+      setLoading(false)
+    } catch (error) {
+      console.log(error);
+      setLoading(false)
+    }
+  }
+  console.log("user role dash: ", userData.role);
+  console.log("userId dash: ", userId);
+
+  if (userData.role == "Admin") {
     return children
   }
   else {

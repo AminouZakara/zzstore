@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import MyContext from './myContext'
 import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query, setDoc, Timestamp } from 'firebase/firestore';
 import { toast } from 'react-toastify';
-import { fireDB } from '../../firebase/FirebaseConfig';
+import { fireDB, storage } from '../../firebase/FirebaseConfig';
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 function myState(props) {
   const [mode, setMode] = useState('light');
@@ -21,44 +22,98 @@ function myState(props) {
   }
 
   const [products, setProducts] = useState({
-    title: null,
-    price: null,
-    imageUrl: null,
-    category: null,
-    description: null,
-    time: Timestamp.now(),
-    date: new Date().toLocaleString(
-      "en-US",
-      {
-        month: "short",
-        day: "2-digit",
-        year: "numeric",
-      }
-    )
+    title: "",
+    price: "",
+    category: "",
+    description: "",
+
 
   })
   // ********************** Add Product Section  **********************
+  const [images, setImages] = useState([]);
+  const [previewImages, setPreviewImages] = useState([]); // Preview before upload
+  const [uploadedImages, setUploadedImages] = useState([]); // Display after upload
+  const [uploading, setUploading] = useState(false);
+
+  const handleFileChange = (e) => {
+    const files = [...e.target.files];
+    setImages(files);
+
+    // Generate preview URLs
+    const previews = files.map((file) => URL.createObjectURL(file));
+    setPreviewImages(previews);
+  };
+
+  const handleUpload = async () => {
+
+
+    setUploading(true);
+
+
+    // Save image URLs to Firestore
+    await addDoc(collection(fireDB, "uploads"), { images: uploadedImageUrls });
+
+    setUploadedImages([...uploadedImages, ...uploadedImageUrls]); // Show uploaded images
+    setUploading(false);
+    alert("Upload successful!");
+    setImages([]);
+    setPreviewImages([]);
+  };
   const addProduct = async () => {
-    if (products.title == null || products.price == null || products.imageUrl == null || products.category == null || products.description == null) {
+    if (images.length === 0) return alert("Please select images first!");
+    if (products.title == null || products.price == null || products.category == null || products.description == null) {
       return toast.error('Please fill all fields')
     }
     const productRef = collection(fireDB, "products")
     setLoading(true)
     try {
-      await addDoc(productRef, products)
-      toast.success("Product Add successfully")
-      setTimeout(() => {
-        window.location.href = "/dashboard"
-      }, 800);
-      getProductData()
-      closeModal()
+      const uploadedImageUrls = [];
+
+      for (const image of images) {
+        const storageRef = ref(storage, `images/${image.name}-${Date.now()}`);
+        await uploadBytes(storageRef, image)
+        const downloadURL = await getDownloadURL(storageRef);
+        uploadedImageUrls.push(downloadURL);
+        setUploadedImages([...uploadedImages, downloadURL]);
+      }
+      const product = {
+        title: products.title,
+        price: products.price,
+        images: uploadedImageUrls,
+        category: products.category,
+        description: products.description,
+        time: Timestamp.now(),
+        date: new Date().toLocaleString(
+          "en-US",
+          {
+            month: "short",
+            day: "2-digit",
+            year: "numeric",
+          }
+        )
+      }
+      await addDoc(productRef, product)
       setLoading(false)
+      toast.success('Product added successfully')
+      setImages([])
+      setPreviewImages([])
+      setUploadedImages([])
+      // ask the user if he wanna add another product. If yes, reset the form otherwise redirect him to the home page
+      const response = window.confirm("Do you want to add another product?");
+      if (response) {
+        setProducts({ title: '', price: '', category: '', description: '' })
+        } else {
+          window.location.href = '/'
+          }
     } catch (error) {
-      console.log(error)
-      setLoading(false)
+      console.error(error);
+      setLoading(false);
+      toast.error('Failed to add product')
     }
-    setProducts("")
   }
+
+
+
 
 
   // ****** get product
@@ -173,7 +228,7 @@ function myState(props) {
   return (
     <MyContext.Provider
       value={{
-        mode, toggleMode, loading, setLoading,
+        mode, toggleMode, loading, setLoading, handleFileChange,
         products, setProducts, addProduct, product,
         edithandle, updateProduct, deleteProduct, order, user,
         searchkey, setSearchkey, filterType, setFilterType,

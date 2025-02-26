@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useState } from 'react'
+import React, { Fragment, useContext, useEffect, useState } from 'react'
 import myContext from '../../context/data/myContext'
 import { Link } from 'react-router-dom';
 import { BsFillCloudSunFill } from 'react-icons/bs'
@@ -6,25 +6,57 @@ import { FiSun } from 'react-icons/fi'
 import { Dialog, Transition } from '@headlessui/react';
 import { RxCross2 } from 'react-icons/rx';
 import { useSelector } from 'react-redux';
+import { collection, getDoc, getDocs, getFirestore } from 'firebase/firestore';
+import App from '../../App';
+import { fireDB } from '../../firebase/FirebaseConfig';
 
 
 function Navbar() {
   const [open, setOpen] = useState(false)
 
+  const db = getFirestore(App)
+
   const context = useContext(myContext);
-  const { mode, toggleMode } = context;
+  const { mode, toggleMode, loading, setLoading } = context;
 
   const user = JSON.parse(localStorage.getItem('user'))
-  // console.log("User email:", user?.user?.email);
+  const userId = user ? user.user.uid : null
+  console.log("userId:", userId);
 
   //logout
   const logout = () => {
-    localStorage.clear('user');
-    window.location.href = "/";
+    //delete user from local storage
+    localStorage.removeItem('user')
+    window.location.reload()
   }
 
   const cartItems = useSelector((state) => state.cart)
   //console.log("Count of cart items:", cartItems.length);
+
+  //get userData from firebase
+  if(user){
+    useEffect(()=>{
+      getUserData();
+    },[])
+  }
+ 
+  const [userData, setUserData] = useState([])
+  const getUserData = async () => {
+    setLoading(true)
+    try {
+      const querySnapshot = await getDocs(collection(fireDB, "users"), userId);
+      querySnapshot.forEach((doc) => {
+        setUserData(doc.data())
+        });
+      setLoading(false)
+    }catch(error){
+      console.log(error);
+      setLoading(false)
+    }
+
+  }
+  console.log("user role: ", userData.role);
+  
 
 
   return (
@@ -77,7 +109,7 @@ function Navbar() {
                     </div> : ""
                   }
                   {
-                    user?.user?.email === 'azt@gmail.com' ? <div className="flow-root">
+                    userData.role === 'Admin' ? <div className="flow-root">
                       <Link to={'/dashboard'} className="-m-2 block p-2 font-medium text-gray-900" style={{ color: mode === 'dark' ? 'white' : '', }}>
                         admin
                       </Link>
@@ -161,7 +193,7 @@ function Navbar() {
                     </Link> : ""
                   }
                   {
-                    user?.user?.email === "azt@gmail.com" ? <Link to={'/dashboard'} className="text-sm font-medium text-gray-700 " style={{ color: mode === 'dark' ? 'white' : '', }}>
+                    userData.role === 'Admin' ? <Link to={'/dashboard'} className="text-sm font-medium text-gray-700 " style={{ color: mode === 'dark' ? 'white' : '', }}>
                       Admin
                     </Link>
                       : ""
