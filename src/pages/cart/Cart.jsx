@@ -117,23 +117,20 @@ function Cart() {
 
   return (
     <Layout >
-      <div className="h-screen bg-gray-100 pt-5 " style={{ backgroundColor: mode === 'dark' ? '#282c34' : '', color: mode === 'dark' ? 'white' : '', }}>
+      <div className="h-full bg-gray-100 pt-5 " style={{ backgroundColor: mode === 'dark' ? '#282c34' : '', color: mode === 'dark' ? 'white' : '', }}>
         <h1 className="mb-10 text-center text-2xl font-bold">My Cart</h1>
         <div className="mx-auto max-w-5xl justify-center px-6 md:flex md:space-x-6 xl:px-0 ">
           <div className="rounded-lg md:w-2/3 ">
             {
               cartItems.length > 0 ? (<>
-                <div className="flex flex-col md:flex-row md:space-x-6
-                md:space-y-0 md:items-center md:justify-between md:px-6
-                md:py-4 md:rounded-lg md:bg-white md:shadow-md md:dark
-                :bg-gray-800 md:dark:bg-gray-800 md:dark:text-white
-                ">
+                <div  >
                   {
                     cartItems.map((item, index) => {
-                      const { title, price, description, imageUrl, } = item;
+                      const { title, price, description, images, } = item;
                       return (
-                        <div key={index} className="justify-between mb-6 rounded-lg border  drop-shadow-xl bg-white p-6  sm:flex  sm:justify-start" style={{ backgroundColor: mode === 'dark' ? 'rgb(32 33 34)' : '', color: mode === 'dark' ? 'white' : '', }}>
-                          <img src={imageUrl} alt="product-image" className="w-full rounded-lg sm:w-40" />
+                        <div key={index} className="justify-between mb-6 rounded-lg border  drop-shadow-xl bg-white p-6  sm:flex  sm:justify-start" 
+                        style={{ backgroundColor: mode === 'dark' ? 'rgb(32 33 34)' : '', color: mode === 'dark' ? 'white' : '', }}>
+                          <img src={images} alt="product-image" className="w-full rounded-lg sm:w-40" />
                           <div className="sm:ml-4 sm:flex sm:w-full sm:justify-between">
                             <div className="mt-5 sm:mt-0">
                               <h2 className="text-lg font-bold text-gray-900" style={{ color: mode === 'dark' ? 'white' : '' }}>{title}</h2>
