@@ -13,6 +13,17 @@ import { SlArrowRight } from 'react-icons/sl';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 function ProductInfo() {
+
+    {/**
+         title: productTemp.data().title,
+                price: productTemp.data().price,
+                image: productTemp.data().image,
+                description: productTemp.data().description,
+                category: productTemp.data().category,
+                stock: productTemp.data().stock,
+                rating: productTemp.data().rating,
+                reviews: productTemp.data().reviews,
+        */}
     const context = useContext(myContext);
     const { loading, setLoading, mode } = context;
 
@@ -25,7 +36,11 @@ function ProductInfo() {
         try {
             const productTemp = await getDoc(doc(fireDB, "products", params.id))
             // console.log(productTemp)
-            setProducts(productTemp.data());
+
+            setProducts({
+                id: productTemp.id, ...productTemp.data()
+
+            });
             // console.log(productTemp.data())
             setLoading(false)
         } catch (error) {
@@ -33,6 +48,7 @@ function ProductInfo() {
             setLoading(false)
         }
     }
+    console.log("products", products);
 
 
     useEffect(() => {
