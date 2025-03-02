@@ -35,6 +35,9 @@ function myState(props) {
   const [uploadedImages, setUploadedImages] = useState([]); // Display after upload
   const [uploading, setUploading] = useState(false);
 
+  const [selectedSizes, setSelectedSizes] = useState([]);
+  const [selectedColors, setSelectedColors] = useState([]);
+
   const handleFileChange = (e) => {
     const files = [...e.target.files];
     setImages(files);
@@ -42,6 +45,23 @@ function myState(props) {
     // Generate preview URLs
     const previews = files.map((file) => URL.createObjectURL(file));
     setPreviewImages(previews);
+  };
+   // Handle size selection
+   const handleSizeChange = (size) => {
+    setSelectedSizes((prevSizes) =>
+      prevSizes.includes(size)
+        ? prevSizes.filter((s) => s !== size)
+        : [...prevSizes, size]
+    );
+  };
+
+  // Handle color selection
+  const handleColorChange = (color) => {
+    setSelectedColors((prevColors) =>
+      prevColors.includes(color)
+        ? prevColors.filter((c) => c !== color)
+        : [...prevColors, color]
+    );
   };
 
   const handleUpload = async () => {
@@ -81,6 +101,8 @@ function myState(props) {
         price: products.price,
         images: uploadedImageUrls,
         category: products.category,
+        sizes: selectedSizes,
+        colors: selectedColors,
         description: products.description,
         time: Timestamp.now(),
         date: new Date().toLocaleString(
@@ -98,6 +120,8 @@ function myState(props) {
       setImages([])
       setPreviewImages([])
       setUploadedImages([])
+      setSelectedSizes([]);
+      setSelectedColors([]);
       // ask the user if he wanna add another product. If yes, reset the form otherwise redirect him to the home page
       const response = window.confirm("Do you want to add another product?");
       if (response) {
@@ -225,6 +249,17 @@ function myState(props) {
   const [filterType, setFilterType] = useState('')
   const [filterPrice, setFilterPrice] = useState('')
 
+     // Select colors
+     const [selectedColor, setSelectedColor] = useState(null)
+     const handleColorClicked = (color) => {
+         setSelectedColor(color)
+     }
+ 
+     const [selectedSize, setSelectedSize] = useState(null)
+     const handleSizeClicked = (size) => {
+         setSelectedSize(size)
+     }
+
   return (
     <MyContext.Provider
       value={{
@@ -232,7 +267,8 @@ function myState(props) {
         products, setProducts, addProduct, product,
         edithandle, updateProduct, deleteProduct, order, user,
         searchkey, setSearchkey, filterType, setFilterType,
-        filterPrice, setFilterPrice
+        filterPrice, setFilterPrice, handleSizeChange, handleColorChange,
+        selectedSizes, selectedColors, handleSizeClicked, handleColorClicked, selectedSize, selectedColor
       }} >
       {props.children}
     </MyContext.Provider>

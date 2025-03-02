@@ -25,7 +25,7 @@ function ProductInfo() {
                 reviews: productTemp.data().reviews,
         */}
     const context = useContext(myContext);
-    const { loading, setLoading, mode } = context;
+    const { loading, setLoading, mode, selectedColor, selectedSize, handleColorClicked, handleSizeClicked } = context;
 
     const [products, setProducts] = useState('')
     const params = useParams()
@@ -74,18 +74,22 @@ function ProductInfo() {
 
     // Slide the images
     const [currentIndex, setCurrentIndex] = useState(0);
-
+    // next Slide
     const nextSlide = () => {
         setCurrentIndex((prevIndex) =>
             prevIndex === products.images.length - 1 ? 0 : prevIndex + 1
         );
     };
-
+    // preview Slide
     const prevSlide = () => {
         setCurrentIndex((prevIndex) =>
             prevIndex === 0 ? products.images.length - 1 : prevIndex - 1
         );
     };
+
+ 
+
+
 
 
     return (
@@ -99,9 +103,9 @@ function ProductInfo() {
                     ) : (
                         <div className="container px-5 py-10 mx-auto">
                             {products &&
-                                <div className="lg:w-4/5 mx-auto flex flex-wrap">
+                                <div className="w-full  mx-auto flex flex-wrap">
 
-                                    <div style={{ textAlign: "center", position: "relative", }}>
+                                    <div className='w-full flex justify-center items-center  md:w-1/2 '  style={{ textAlign: "center", position: "relative", }}>
 
                                         {/* Left Arrow */}
                                         <FiChevronLeft
@@ -122,7 +126,8 @@ function ProductInfo() {
                                         <img
                                             src={products.images[currentIndex]}
                                             alt={`Slide ${currentIndex}`}
-                                            style={{ width: "100%", height: "auto", borderRadius: "10px" }}
+                                            className='w-full md:w-2/5 h-auto'
+                                            style={{  borderRadius: "10px" }}
 
                                         />
                                         {/* Right Arrow */}
@@ -144,11 +149,56 @@ function ProductInfo() {
                                     </div>
                                     <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
                                         <h2 className="text-sm title-font text-gray-500 tracking-widest">
-                                            BRAND NAME
+                                            Z-Z Store
                                         </h2>
                                         <h1 style={{ color: mode === 'dark' ? 'white' : '', }} className="text-gray-900 text-3xl title-font font-medium mb-1">
                                             {products.title}
                                         </h1>
+                                        <div className="flex items-center">
+                                            <h4>Colors:</h4>
+                                            <div className="flex ml-2">
+                                                {
+                                                    products.colors.map((color, index) => (
+                                                        <div key={index}
+                                                            className="flex"
+                                                            style={{
+                                                                flexDirection: "row",
+                                                                boxShadow : "0px 0px 10px rgba(0,0,0,2)",
+                                                                backgroundColor: color, width: "20px", height: "20px", borderRadius: "50%",
+                                                                margin: "15px", cursor: "pointer", outline: selectedColor === color ? `4px solid ${color}` : "",
+                                                            }}
+                                                            onClick={() => handleColorClicked(color)}
+                                                        ></div>
+
+                                                    ))}
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center">
+                                            <h4>Sizes:</h4>
+                                            <div className="flex ml-2">
+                                                {
+                                                    products.sizes.map((size, index) => (
+                                                        <div key={index} className="flex"
+                                                            style={{
+                                                                flexDirection: "row",
+                                                                justifyContent: "center",
+                                                                alignItems: "center",
+                                                                 width: "20px", height: "20px",
+                                                                 margin: "10px", cursor: "pointer",
+                                                                 borderRadius: "10%",
+                                                                 borderWidth: "2px",
+                                                                 padding: "12px",
+                                                                 paddingInline : "18px",
+                                                                 borderColor: selectedSize === size ? "black" : "",
+                                                            }}
+                                                            onClick={() => handleSizeClicked(size)}
+                                                        >
+                                                            <p style={{ color: mode === 'dark' ? 'white' : '', }} className="text-gray-900 text-xl ">{size}</p>
+                                                        </div>
+                                                    ))}
+                                            </div>
+
+                                        </div>
                                         <div className="flex mb-4">
                                             <span className="flex items-center">
                                                 <svg

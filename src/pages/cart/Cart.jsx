@@ -3,7 +3,7 @@ import myContext from '../../context/data/myContext';
 import Layout from '../../components/layout/Layout';
 import Modal from '../../components/modal/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteFromCart } from '../../redux/cartSlice';
+import { decreaseQuantity, deleteFromCart, increaseQuantity } from '../../redux/cartSlice';
 import { toast } from 'react-toastify';
 import { fireDB } from '../../firebase/FirebaseConfig';
 import { addDoc, collection } from 'firebase/firestore';
@@ -17,12 +17,15 @@ function Cart() {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart);
   //console.log("Cart Items: ", cartItems);
+  const TPrice = cartItems.reduce(
+    (acc, item) => acc + item.price * item.quantity, 0
+  )
 
   const [totalAmount, setTotalAmount] = useState(0);
   useEffect(() => {
     let temp = 0;
     cartItems.forEach((cartItem) => {
-      temp = temp + parseInt(cartItem.price)
+      temp = temp + parseInt(cartItem.price * cartItem.quantity)
     })
     setTotalAmount(temp);
     // console.log(temp)
@@ -54,17 +57,25 @@ function Cart() {
     dispatch(deleteFromCart(id))
     toast.success("Product removed from cart");
   }
+  //handleIncrease
+  const handleIncrease = (id) => {
+    dispatch(increaseQuantity(id))
+    }
+    //handleDecrease
+    const handleDecrease = (id) => {
+      dispatch(decreaseQuantity(id))
+      }
 
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cartItems));
   }, [cartItems])
 
-  cartItems.map((item, index)=>{
+  cartItems.map((item, index) => {
     console.log("Title", item.title);
     console.log("id", item.id);
-    
+
   });
-  
+
 
   //Pay Now
   const [name, setName] = useState("")
@@ -133,21 +144,41 @@ function Cart() {
                 <div  >
                   {
                     cartItems.map((item, index) => {
-                      const {id, title, price, description, images, } = item;
+                      const { id, title, price, description, images, } = item;
                       return (
-                        <div key={index} 
-                        className="justify-between mb-6 flex rounded-lg border  drop-shadow-xl bg-white p-6  sm:flex  sm:justify-start" 
-                        style={{ backgroundColor: mode === 'dark' ? 'rgb(32 33 34)' : '', color: mode === 'dark' ? 'white' : '', }}>
-                          <img src={images} alt="product-image" 
-                          className="w-32 h-32 mr-4 md:mr-0 object-cover rounded-lg sm:w-32 sm:h-32"
+                        <div key={index}
+                          className="justify-between mb-6 flex rounded-lg border  drop-shadow-xl bg-white p-2  sm:flex  sm:justify-start"
+                          style={{ backgroundColor: mode === 'dark' ? 'rgb(32 33 34)' : '', color: mode === 'dark' ? 'white' : '', }}>
+                          <img src={images} alt="product-image"
+                            className="w-32 h-32 mr-4 md:mr-0 object-cover rounded-lg sm:w-32 sm:h-32"
                           />
-                          <div className="sm:ml-4 sm:flex sm:w-full sm:justify-between">
-                            <div className="mt-5 sm:mt-0">
-                              <h2 className="text-lg font-bold text-gray-900" style={{ color: mode === 'dark' ? 'white' : '' }}>{title}</h2>
-                              <p className="mt-1 text-xs font-semibold text-gray-700" style={{ color: mode === 'dark' ? 'white' : '' }}> {price} CFA </p>
+                          <div className="md:w-full sm:ml-4 sm:flex sm:w-full sm:justify-between items-start">
+                            <div className="md:w-3/6">
+                              <h2 className="text-lg  font-bold text-gray-900" style={{ color: mode === 'dark' ? 'white' : '' }}>{title}</h2>
                             </div>
-                            <div onClick={()=> deleteCart(item)} className="mt-4 flex justify-between sm:space-y-6 sm:mt-0 sm:block sm:space-x-6">
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+
+                            <div className="md:w-1/6 md:flex quantity items-center mt-2">
+                              <button className=" bg-gray-200 hover:bg-gray-400  text-gray-900 hover:text-white font-bold px-2 rounded"
+                                style={{ backgroundColor: mode === 'dark' ? ' rgb(32 33 34)' : '', color: mode === 'dark' ? 'white' : '' }}
+                              onClick={() => handleDecrease(item)}
+                              >-</button>
+
+                              <span className='mr-2 ml-2 font-bold'> {item.quantity} </span>
+
+                              <button className="bg-gray-200 hover:bg-gray-500 text-gray-600 hover:text-white font-bold  px-2 rounded"
+                                style={{ backgroundColor: mode === 'dark' ? ' rgb(32 33 34)' : '', color: mode === 'dark' ? 'white' : '' }}
+                              onClick={() => handleIncrease(item)}
+                              >+</button>
+                            </div>
+
+                            <div className="md:w-1/5 mt-2 total">
+                              <p className="text-l  text-gray-900" 
+                              style={{ color: mode === 'dark' ? 'white' : '' }}
+                              > {parseFloat(price * item.quantity).toFixed(2)} CFA</p>
+                            </div>
+
+                            <div onClick={() => deleteCart(item)} className="md:w-1/12  ">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mt-2 items-end hover:text-red-600 cursor-pointer flex">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                               </svg>
 
@@ -162,11 +193,11 @@ function Cart() {
               </>) : (
                 <div className="text-center text-2xl font-bold text-gray-500" style={{
                   color: mode === 'dark' ? 'white' : '',
-                  }}>
-                    <h1>Your cart is empty</h1>
-                    </div>
+                }}>
+                  <h1>Your cart is empty</h1>
+                </div>
               )
-             
+
             }
 
           </div>
