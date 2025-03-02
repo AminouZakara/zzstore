@@ -117,15 +117,16 @@ function myState(props) {
       await addDoc(productRef, product)
       setLoading(false)
       toast.success('Product added successfully')
-      setImages([])
-      setPreviewImages([])
-      setUploadedImages([])
-      setSelectedSizes([]);
-      setSelectedColors([]);
+      //setImages([])
+      //setPreviewImages([])
+      //setUploadedImages([])
+      //setSelectedSizes([]);
+      //setSelectedColors([]);
       // ask the user if he wanna add another product. If yes, reset the form otherwise redirect him to the home page
       const response = window.confirm("Do you want to add another product?");
       if (response) {
-        setProducts({ title: '', price: '', category: '', description: '' })
+        console.log("another product");
+        
         } else {
           window.location.href = '/'
           }
