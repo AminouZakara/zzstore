@@ -121,7 +121,7 @@ function myState(props) {
       //setPreviewImages([])
       //setUploadedImages([])
       //setSelectedSizes([]);
-      //setSelectedColors([]);
+      setSelectedColors([]);
       // ask the user if he wanna add another product. If yes, reset the form otherwise redirect him to the home page
       const response = window.confirm("Do you want to add another product?");
       if (response) {
@@ -213,14 +213,14 @@ function myState(props) {
     setProducts(item)
   }
   // update product
-  const updateProduct = async (item) => {
+  const updateProduct = async () => {
     setLoading(true)
     try {
       await setDoc(doc(fireDB, "zzstoreProducts", products.id), products);
       toast.success("Product Updated successfully")
       setTimeout(() => {
         window.location.href = '/dashboard'
-      }, 2000);
+      }, 3000);
       getProductData();
       setLoading(false)
     } catch (error) {

@@ -3,7 +3,7 @@ import myContext from '../../../context/data/myContext'
 
 function UpdateProduct() {
     const context = useContext(myContext)
-    const { products, setProducts, updateProduct } = context
+    const { products, setProducts, updateProduct, loading } = context
 
     return (
         <div>
@@ -31,15 +31,7 @@ function UpdateProduct() {
                             placeholder='Product price'
                         />
                     </div>
-                    <div>
-                        <input type="text"
-                            name='imageurl'
-                            onChange={(e) => setProducts({ ...products, imageUrl: e.target.value })} 
-                            value={products.imageUrl}
-                            className=' bg-gray-600 mb-4 px-2 py-2 w-full lg:w-[20em] rounded-lg text-white placeholder:text-gray-200 outline-none'
-                            placeholder='Product imageUrl'
-                        />
-                    </div>
+                   
                     <div>
                         <input type="text"
                             name='category'
@@ -60,10 +52,14 @@ function UpdateProduct() {
                         </textarea>
                     </div>
                     <div className=' flex justify-center mb-3'>
+                        
                         <button
                             onClick={updateProduct}
+                            disabled={loading}
                             className=' bg-yellow-500 w-full text-black font-bold  px-2 py-2 rounded-lg'>
-                            Update Product
+                            {
+                                loading ? 'Updating...' : 'Update Product'
+                            }
                         </button>
                     </div>
 
