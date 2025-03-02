@@ -87,7 +87,7 @@ function ProductInfo() {
         );
     };
 
- 
+
 
 
 
@@ -105,7 +105,7 @@ function ProductInfo() {
                             {products &&
                                 <div className="w-full  mx-auto flex flex-wrap">
 
-                                    <div className='w-full flex justify-center items-center  md:w-1/2 '  style={{ textAlign: "center", position: "relative", }}>
+                                    <div className='w-full flex justify-center items-center  md:w-1/2 ' style={{ textAlign: "center", position: "relative", }}>
 
                                         {/* Left Arrow */}
                                         <FiChevronLeft
@@ -127,7 +127,7 @@ function ProductInfo() {
                                             src={products.images[currentIndex]}
                                             alt={`Slide ${currentIndex}`}
                                             className='w-full md:w-2/5 h-auto'
-                                            style={{  borderRadius: "10px" }}
+                                            style={{ borderRadius: "10px" }}
 
                                         />
                                         {/* Right Arrow */}
@@ -163,9 +163,9 @@ function ProductInfo() {
                                                             className="flex"
                                                             style={{
                                                                 flexDirection: "row",
-                                                                boxShadow : "0px 0px 10px rgba(0,0,0,2)",
+                                                                borderWidth: 0.5, borderColor: "grey",
                                                                 backgroundColor: color, width: "20px", height: "20px", borderRadius: "50%",
-                                                                margin: "15px", cursor: "pointer", outline: selectedColor === color ? `4px solid ${color}` : "",
+                                                                margin: "15px", cursor: "pointer", outline: selectedColor === color ? `3px solid black` : "",
                                                             }}
                                                             onClick={() => handleColorClicked(color)}
                                                         ></div>
@@ -183,13 +183,13 @@ function ProductInfo() {
                                                                 flexDirection: "row",
                                                                 justifyContent: "center",
                                                                 alignItems: "center",
-                                                                 width: "20px", height: "20px",
-                                                                 margin: "10px", cursor: "pointer",
-                                                                 borderRadius: "10%",
-                                                                 borderWidth: "2px",
-                                                                 padding: "12px",
-                                                                 paddingInline : "18px",
-                                                                 borderColor: selectedSize === size ? "black" : "",
+                                                                width: "20px", height: "20px",
+                                                                margin: "10px", cursor: "pointer",
+                                                                borderRadius: "10%",
+                                                                borderWidth: "2px",
+                                                                padding: "12px",
+                                                                paddingInline: "18px",
+                                                                borderColor: selectedSize === size ? "black" : "",
                                                             }}
                                                             onClick={() => handleSizeClicked(size)}
                                                         >
