@@ -34,7 +34,7 @@ function ProductInfo() {
     const getProductData = async () => {
         setLoading(true)
         try {
-            const productTemp = await getDoc(doc(fireDB, "products", params.id))
+            const productTemp = await getDoc(doc(fireDB, "zzstoreProducts", params.id))
             // console.log(productTemp)
 
             setProducts({

@@ -44,7 +44,7 @@ function Navbar() {
   const getUserData = async () => {
     setLoading(true)
     try {
-      const querySnapshot = await getDocs(collection(fireDB, "users"), userId);
+      const querySnapshot = await getDocs(collection(fireDB, "zzstoreUsers"), userId);
       querySnapshot.forEach((doc) => {
         setUserData(doc.data())
         });

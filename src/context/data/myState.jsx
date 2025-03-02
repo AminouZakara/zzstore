@@ -84,13 +84,13 @@ function myState(props) {
     if (products.title == null || products.price == null || products.category == null || products.description == null) {
       return toast.error('Please fill all fields')
     }
-    const productRef = collection(fireDB, "products")
+    const productRef = collection(fireDB, "zzstoreProducts")
     setLoading(true)
     try {
       const uploadedImageUrls = [];
 
       for (const image of images) {
-        const storageRef = ref(storage, `images/${image.name}-${Date.now()}`);
+        const storageRef = ref(storage, `zzstoreImages/${image.name}-${Date.now()}`);
         await uploadBytes(storageRef, image)
         const downloadURL = await getDownloadURL(storageRef);
         uploadedImageUrls.push(downloadURL);
@@ -147,7 +147,7 @@ function myState(props) {
     setLoading(true)
     try {
       const q = query(
-        collection(fireDB, "products"),
+        collection(fireDB, "zzstoreProducts"),
         orderBy("time"),
         // limit(5)
       );
@@ -172,7 +172,7 @@ function myState(props) {
   const getOrderData = async () => {
     setLoading(true)
     try {
-      const querySnapshot = await getDocs(collection(fireDB, 'orders'))
+      const querySnapshot = await getDocs(collection(fireDB, 'zzstoreOrders'))
       const orders = querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
       setOrder(orders)
       setLoading(false);
@@ -189,7 +189,7 @@ function myState(props) {
   const getUserData = async () => {
     setLoading(true)
     try {
-      const result = await getDocs(collection(fireDB, "users"))
+      const result = await getDocs(collection(fireDB, "zzstoreUsers"))
       const orders = result.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
       setUser(orders)
       setLoading(false);
@@ -215,7 +215,7 @@ function myState(props) {
   const updateProduct = async (item) => {
     setLoading(true)
     try {
-      await setDoc(doc(fireDB, "products", products.id), products);
+      await setDoc(doc(fireDB, "zzstoreProducts", products.id), products);
       toast.success("Product Updated successfully")
       setTimeout(() => {
         window.location.href = '/dashboard'
@@ -234,7 +234,7 @@ function myState(props) {
 
     try {
       setLoading(true)
-      await deleteDoc(doc(fireDB, "products", item.id));
+      await deleteDoc(doc(fireDB, "zzstoreProducts", item.id));
       toast.success('Product Deleted successfully')
       setLoading(false)
       getProductData()

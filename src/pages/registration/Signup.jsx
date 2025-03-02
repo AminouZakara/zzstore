@@ -35,7 +35,7 @@ function Signup() {
                 email: users.user.email,
                 time: Timestamp.now()
             }
-            const userRef = collection(fireDB, "users")
+            const userRef = collection(fireDB, "zzstoreUsers")
             await addDoc(userRef, user);
             toast.success("Signup Succesfully")
             console.log("Signup Succesfully")

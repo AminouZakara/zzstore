@@ -118,7 +118,7 @@ function Cart() {
       console.log(orderInfo)
       //api call to pay now
       try {
-        const result = await addDoc(collection(fireDB, "orders"), orderInfo)
+        const result = await addDoc(collection(fireDB, "zzstoreOrders"), orderInfo)
         console.log(result)
         toast.success("Payment Completed Successfully!")
         setIsPaying(false)
