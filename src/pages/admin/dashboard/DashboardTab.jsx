@@ -191,7 +191,7 @@ function DashboardTab() {
                                                 </tr>
                                             </thead>
                                             {allorder.cartItems.map((item, index) => {
-                                                const { title, description, category, imageUrl, price } = item;
+                                                const { title, description, category, images, price } = item;
                                                 console.log(item)
                                                 return (
                                                     <tbody>
@@ -203,13 +203,13 @@ function DashboardTab() {
                                                                 {allorder.paymentId}
                                                             </td>
                                                             <th scope="row" className="px-6 py-4 font-medium text-black whitespace-nowrap">
-                                                                <img className='w-16' src={imageUrl} alt="img" />
+                                                                <img className='w-16' src={images} alt="img" />
                                                             </th>
                                                             <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
                                                                 {title}
                                                             </td>
                                                             <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
-                                                                ₹{price}
+                                                                {price} CFA
                                                             </td>
                                                             <td className="px-6 py-4 text-black " style={{ color: mode === 'dark' ? 'white' : '' }}>
                                                                 {category}
