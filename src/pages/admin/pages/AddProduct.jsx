@@ -7,7 +7,9 @@ function AddProduct() {
         setLoading, handleSizeChange, handleColorChange, selectedSizes, selectedColors, } = context
 
     const sizesAvailable = ["XS", "S", "M", "L", "XL", "2XL", "3XL"];
-    const colorsAvailable = ["Red", "Blue", "Green", "Gray", "Black", "White"];
+    const colorsAvailable = [
+        "Red", "Blue", "Green", "Gray", "Black", "White", 
+        "Yellow", "Purple", "Orange", "Pink", "beige",];
 
 
 
