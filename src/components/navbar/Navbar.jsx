@@ -93,7 +93,7 @@ function Navbar() {
                     onClick={() => setOpen(false)}
                   >
                     <span className="sr-only">Close menu</span>
-                    <RxCross2 />
+                    <RxCross2 className="h-6 w-6 font-bold border-2  rounded-2xl" />
                   </button>
                 </div>
                 <div className="space-y-6 border-t border-gray-200 px-4 py-6">
